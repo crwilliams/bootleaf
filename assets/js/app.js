@@ -123,7 +123,7 @@ map = L.map("map", {
 /* Layer control listeners that allow for a single markerClusters layer */
 map.on("overlayadd", function(e) {
   for(layername in layers) {
-    if(layers[layername].emptylayer !== undefined) {
+    if(e.layer == layers[layername].emptylayer) {
       markerClusters.addLayer(layers[layername].geojson);
     }
   }
@@ -131,7 +131,7 @@ map.on("overlayadd", function(e) {
 
 map.on("overlayremove", function(e) {
   for(layername in layers) {
-    if(layers[layername].emptylayer !== undefined) {
+    if(e.layer == layers[layername].emptylayer) {
       markerClusters.removeLayer(layers[layername].geojson);
     }
   }
