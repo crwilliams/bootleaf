@@ -53,7 +53,7 @@
           <li class="dropdown">
             <a id="toolsDrop" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-globe" style="color: white"></i>&nbsp;&nbsp;Tools <b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="map.fitBounds(boroughs.getBounds()); return false;"><i class="fa fa-arrows-alt"></i>&nbsp;&nbsp;Zoom To Full Extent</a></li>
+              <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="map.fitBounds(layers[masterLayerName].geojson.getBounds()); return false;"><i class="fa fa-arrows-alt"></i>&nbsp;&nbsp;Zoom To Full Extent</a></li>
               <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="$('#legendModal').modal('show'); return false;"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;Show Legend</a></li>
               <li class="divider hidden-xs"></li>
               <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="$('#loginModal').modal('show'); return false;"><i class="fa fa-user"></i>&nbsp;&nbsp;Login</a></li>
@@ -61,11 +61,7 @@
           </li>
           <li class="dropdown">
               <a class="dropdown-toggle" id="downloadDrop" href="#" role="button" data-toggle="dropdown"><i class="fa fa-cloud-download" style="color: white"></i>&nbsp;&nbsp;Download <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="data/boroughs.geojson" download="boroughs.geojson" target="_blank" data-toggle="collapse" data-target=".navbar-collapse.in"><i class="fa fa-download"></i>&nbsp;&nbsp;Boroughs</a></li>
-                <li><a href="data/subways.geojson" download="subways.geojson" target="_blank" data-toggle="collapse" data-target=".navbar-collapse.in"><i class="fa fa-download"></i>&nbsp;&nbsp;Subway Lines</a></li>
-                <li><a href="data/DOITT_THEATER_01_13SEPT2010.geojson" download="theaters.geojson" target="_blank" data-toggle="collapse" data-target=".navbar-collapse.in"><i class="fa fa-download"></i>&nbsp;&nbsp;Theaters</a></li>
-                <li><a href="data/DOITT_MUSEUM_01_13SEPT2010.geojson" download="museums.geojson" target="_blank" data-toggle="collapse" data-target=".navbar-collapse.in"><i class="fa fa-download"></i>&nbsp;&nbsp;Museums</a></li>
+              <ul id="data-dropdown" class="dropdown-menu">
               </ul>
           </li>
           <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="sidebar.toggle(); return false;"><i class="fa fa-list" style="color: white"></i>&nbsp;&nbsp;Sidebar</a></li>
@@ -78,53 +74,9 @@
       <h4>Points of Interest</h4>
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" id="poi-tabs">
-        <li class="active"><a href="#theaters" onclick="$('#poi-tabs a[href=\'#theaters\']').tab('show'); return false;">Theaters</a></li>
-        <li><a href="#museums" onclick="$('#poi-tabs a[href=\'#museums\']').tab('show'); return false;">Museums</a></li>
       </ul>
       <!-- Tab panes -->
       <div class="tab-content">
-        <div class="tab-pane active" id="theaters">
-          <p>
-            <div class="row">
-              <div class="col-xs-8 col-md-8">
-                <input type="text" class="form-control search" placeholder="Search" />
-              </div>
-              <div class="col-xs-4 col-md-4">
-                <button type="button" class="btn btn-primary pull-right sort" data-sort="theater-name"><i class="fa fa-sort"></i>&nbsp;&nbsp;Sort</button>
-              </div>
-            </div>
-          </p>
-          <table class="table table-condensed table-striped" id="theater-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Address</th>
-              <tr>
-            </thead>
-            <tbody class="list"></tbody>
-          </table>
-        </div>
-        <div class="tab-pane active" id="museums">
-          <p>
-            <div class="row">
-              <div class="col-xs-8 col-md-8">
-                <input type="text" class="form-control search" placeholder="Search" />
-              </div>
-              <div class="col-xs-4 col-md-4">
-                <button type="button" class="btn btn-primary pull-right sort" data-sort="museum-name"><i class="fa fa-sort"></i>&nbsp;&nbsp;Sort</button>
-              </div>
-            </div>
-          </p>
-          <table class="table table-condensed table-striped" id="museum-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Address</th>
-              <tr>
-            </thead>
-            <tbody class="list"></tbody>
-          </table>
-        </div>
       </div>
     </div>
     <div id="loading">
@@ -149,12 +101,7 @@
               <li><a href="#disclaimer" data-toggle="tab"><i class="fa fa-exclamation-circle"></i>&nbsp;Disclaimer</a></li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-globe"></i>&nbsp;Metadata <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#boroughs-tab" data-toggle="tab">Boroughs</a></li>
-                  <li><a href="#subway-lines-tab" data-toggle="tab">Subway Lines</a></li>
-                  <li><a href="#theaters-tab" data-toggle="tab">Theaters</a></li>
-                  <li><a href="#museums-tab" data-toggle="tab">Museums</a></li>
-                </ul>
+                <ul id='metadata-dropdown' class="dropdown-menu"></ul>
               </li>
             </ul>
             <div class="tab-content" id="aboutTabsContent" style="padding-top: 10px;">
@@ -208,18 +155,6 @@
                     </div>
                   </div>
                 </form>
-              </div>
-              <div class="tab-pane fade" id="boroughs-tab">
-                <p>Borough data courtesy of <a href="http://www.nyc.gov/html/dcp/html/bytes/meta_dis_nyboroughwi.shtml" target="_blank">New York City Department of City Planning</a></p>
-              </div>
-              <div class="tab-pane fade" id="subway-lines-tab">
-                <p><a href="http://spatialityblog.com/2010/07/08/mta-gis-data-update/#datalinks" target="_blank">MTA Subway data</a> courtesy of the <a href="http://www.urbanresearch.org/about/cur-components/cuny-mapping-service" target="_blank">CUNY Mapping Service at the Center for Urban Research</a></p>
-              </div>
-              <div class="tab-pane fade" id="theaters-tab">
-                <p>Theater data courtesy of <a href="https://data.cityofnewyork.us/Recreation/Theaters/kdu2-865w" target="_blank">NYC Department of Information & Telecommunications (DoITT)</a></p>
-              </div>
-              <div class="tab-pane fade" id="museums-tab">
-                <p>Museum data courtesy of <a href="https://data.cityofnewyork.us/Recreation/Museums-and-Galleries/sat5-adpb" target="_blank">NYC Department of Information & Telecommunications (DoITT)</a></p>
               </div>
             </div>
           </div>
@@ -308,6 +243,12 @@
     <script src="assets/leaflet-sidebar-0.1.5/L.Control.Sidebar.js"></script>
     <script src="assets/leaflet-markercluster-0.4.0/leaflet.markercluster.js"></script>
     <script src="assets/leaflet-locatecontrol-0.27.0/L.Control.Locate.js"></script>
+    <script src="assets/js/layers/common.js"></script>
+    <script src="assets/js/layers/boroughs.js"></script>
+    <script src="assets/js/layers/subwayLines.js"></script>
+    <script src="assets/js/layers/theaters.js"></script>
+    <script src="assets/js/layers/museums.js"></script>
+    <script src="assets/js/layers/geonames.js"></script>
     <script src="assets/js/app.js"></script>
   </body>
 </html>
