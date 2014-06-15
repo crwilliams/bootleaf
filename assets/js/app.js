@@ -39,7 +39,7 @@ $(document).ready(function() {
       $("#poi-tabs").append('<li' + poi_tab_class + '><a href="#' + layername + '" onclick="$(\'#poi-tabs a[href=\\\'#' + layername + '\\\']\').tab(\'show\'); return false;">' + layers[layername].name + '</a></li>');
       poi_tab_class = '';
       /* Hack to refresh tabs after append */
-      //$("#poi-tabs a[href='#" + layername + "']").tab("show");
+      $("#poi-tabs a[href='#" + layername + "']").tab("show");
     }
     if(layers[layername].metadata !== undefined) {
       $("#metadata-dropdown").append('<li><a href="#' + layername + '-tab" data-toggle="tab">' + layers[layername].name + '</a></li>');
