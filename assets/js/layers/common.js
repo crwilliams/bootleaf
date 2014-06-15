@@ -1,5 +1,4 @@
 var layers = [];
-var masterLayerName = 'boroughs';
 
 function layerInit(layer) {
   $.getJSON(layer.datafile, function (data) {
@@ -37,7 +36,7 @@ function defaultSelected(layer, map, datum) {
 
 function makeHeader(layer) {
   if(layer.icon !== undefined) {
-    return "<img src='" + layer.icon + "' width='24' height='28'>&nbsp;" + layer.name;
+    return "<img src='" + layer.icon + "' width='12' height='14'>&nbsp;" + layer.name;
   } else {
     return layer.name;
   }
@@ -48,9 +47,13 @@ function makeList(layername) {
 }
 
 function getDefaultMarker(layer, feature, latlng) {
+  var icon = layer.icon;
+  if(feature.properties.ICON !== undefined) {
+    icon = feature.properties.ICON;
+  }
   return L.marker(latlng, {
     icon: L.icon({
-      iconUrl: layer.icon,
+      iconUrl: icon,
       iconSize: [24, 28],
       iconAnchor: [12, 28],
       popupAnchor: [0, -25]
@@ -94,7 +97,11 @@ function getTypeaheadTemplate(layer) {
     header: "<h4 class='typeahead-header'>" + makeHeader(layer) + "</h4>"
   }
   if(layer.type == 'point of interest') {
-    typeaheadTemplate.suggestion = Handlebars.compile(["{{name}}<br>&nbsp;<small>{{address}}</small>"].join(""));
+    var format = "{{name}}<br>&nbsp;<small>{{address}}</small>";
+    if(layer.typeaheadFormat !== undefined) {
+      format = layer.typeaheadFormat;
+    }
+    typeaheadTemplate.suggestion = Handlebars.compile(format);
   }
   return typeaheadTemplate;
 }

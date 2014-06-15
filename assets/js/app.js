@@ -51,6 +51,20 @@ $(document).ready(function() {
   }
 });
 
+function resetViewport() {
+  var bounds = undefined;
+  for(layername in layers) {
+    if(layers[layername].geojson !== undefined) {
+      if(bounds == undefined) {
+        bounds = L.latLngBounds(layers[layername].geojson.getBounds());
+      } else {
+        bounds.extend(layers[layername].geojson.getBounds());
+      }
+    }
+  }
+  map.fitBounds(bounds);
+}
+
 function getViewport() {
   if (sidebar.isVisible()) {
     map.setActiveArea({
@@ -115,7 +129,7 @@ var markerClusters = new L.MarkerClusterGroup({
 map = L.map("map", {
   zoom: 10,
   center: [40.702222, -73.979378],
-  layers: [mapquestOSM, layers[masterLayerName].geojson, markerClusters],
+  layers: [mapquestOSM, markerClusters],
   zoomControl: false,
   attributionControl: false
 });
@@ -241,7 +255,7 @@ $("#searchbox").click(function () {
 /* Typeahead search functionality */
 $(document).one("ajaxStop", function () {
   /* Fit map to masterLayer bounds */
-  map.fitBounds(layers[masterLayerName].geojson.getBounds());
+  resetViewport();
   $("#loading").hide();
 
   var lists = [];
