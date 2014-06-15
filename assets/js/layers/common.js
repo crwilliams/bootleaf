@@ -77,7 +77,7 @@ function handleFeature(layername, feature, layer) {
         closeButton: false
       });
     }
-    $("#" + layername + "-table tbody").append('<tr><td class="' + layername + '-name">'+layer.feature.properties.NAME+'</td><td class="' + layername + '-address"><a href="#" onclick="sidebarClick('+layer.feature.geometry.coordinates[1]+', '+layer.feature.geometry.coordinates[0]+', '+L.stamp(layer)+', ' + layername + 'Layer); return false;">'+layer.feature.properties.ADDRESS1+'</a></td></tr>');
+    $("#" + layername + "-table tbody").append('<tr><td class="' + layername + '-name">'+layer.feature.properties.NAME+'</td><td class="' + layername + '-address"><a href="#" onclick="sidebarClick('+layer.feature.geometry.coordinates[1]+', '+layer.feature.geometry.coordinates[0]+', '+L.stamp(layer)+', layers[\'' + layername + '\'].emptylayer); return false;">'+layer.feature.properties.ADDRESS1+'</a></td></tr>');
     layers[layername].search.push({
       name: layer.feature.properties.NAME,
       address: layer.feature.properties.ADDRESS1,
