@@ -240,7 +240,11 @@ if (document.body.clientWidth <= 767) {
   var isCollapsed = false;
 }
 
-var layerControl = L.control.groupedLayers(baseLayers, groupedOverlays, {
+var layerControlBaseLayers = baseLayers;
+if(Object.keys(layerControlBaseLayers).length == 1) {
+  layerControlBaseLayers = [];
+}
+var layerControl = L.control.groupedLayers(layerControlBaseLayers, groupedOverlays, {
   collapsed: isCollapsed
 }).addTo(map);
 
