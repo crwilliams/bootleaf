@@ -13,6 +13,15 @@ $(document).ready(function() {
   var poi_tab_class = ' class="active"';
   for(layername in layers) {
     if(layers[layername].type == 'point of interest') {
+      var th = '';
+      if(layers[layername].columns !== undefined) {
+        for(i in layers[layername].columns) {
+          th += '<th>' + layers[layername].columns[i] + '</th>';
+        }
+      } else {  
+        th += '<th>Name</th>';
+        th += '<th>Address</th>';
+      }
       $("#sidebar .tab-content").append('\
           <div class="tab-pane active" id="' + layername + '">\
             <p>\
@@ -21,16 +30,13 @@ $(document).ready(function() {
                   <input type="text" class="form-control search" placeholder="Search" />\
                 </div>\
                 <div class="col-xs-4 col-md-4">\
-                  <button type="button" class="btn btn-primary pull-right sort" data-sort="' + layername + '-name"><i class="fa fa-sort"></i>&nbsp;&nbsp;Sort</button>\
+                  <button type="button" class="btn btn-primary pull-right sort" data-sort="' + layername + '-Name"><i class="fa fa-sort"></i>&nbsp;&nbsp;Sort</button>\
                 </div>\
               </div>\
             </p>\
             <table class="table table-condensed table-striped" id="'+ layername + '-table">\
               <thead>\
-                <tr>\
-                  <th>Name</th>\
-                  <th>Address</th>\
-                <tr>\
+                <tr>' + th + '<tr>\
               </thead>\
               <tbody class="list"></tbody>\
             </table>\
@@ -261,7 +267,7 @@ $(document).one("ajaxStop", function () {
   var lists = [];
   for(layername in layers) {
     if(layers[layername].type == 'point of interest') {
-      lists[layername] = makeList(layername);
+      lists[layername] = makeList(layername, layers[layername].columns);
     }
   }
 
