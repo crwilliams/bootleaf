@@ -31,9 +31,10 @@ layers['buildings'] = {
     style: function (feature) {
       return {
         color: "black",
-        fill: false,
+        fill: true,
         opacity: 1,
-        clickable: true
+        clickable: true,
+        weight: "1px"
       };
     },
     onEachFeature: function (feature, layer) {
@@ -62,7 +63,8 @@ layers['sites'] = {
         color: "black",
         fill: false,
         opacity: 1,
-        clickable: true
+        clickable: true,
+        weight: "3px"
       };
     },
     onEachFeature: function (feature, layer) {
