@@ -59,12 +59,16 @@ $(document).ready(function() {
 
 function resetViewport() {
   var bounds = undefined;
-  for(layername in layers) {
-    if(layers[layername].geojson !== undefined) {
-      if(bounds == undefined) {
-        bounds = L.latLngBounds(layers[layername].geojson.getBounds());
-      } else {
-        bounds.extend(layers[layername].geojson.getBounds());
+  if(defaultViewport !== undefined) {
+    bounds = defaultViewport;
+  } else {
+    for(layername in layers) {
+      if(layers[layername].geojson !== undefined) {
+        if(bounds == undefined) {
+          bounds = L.latLngBounds(layers[layername].geojson.getBounds());
+        } else {
+          bounds.extend(layers[layername].geojson.getBounds());
+        }
       }
     }
   }
