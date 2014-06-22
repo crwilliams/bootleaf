@@ -218,6 +218,11 @@ function createLayer(layername, name, icon, metadata)
   };
 }
 
+function setTitle(title) {
+  document.title = title;
+  $('#title').html(title);
+}
+
 var version = "southampton";
 if(window.location.hash) {
   version = window.location.hash.substring(1).replace(/_.*/, '');

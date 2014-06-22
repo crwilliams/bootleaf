@@ -75,3 +75,5 @@ layers['sites'] = {
   },
   columns: ['Name']
 };
+
+setTitle('University of Southampton Map');

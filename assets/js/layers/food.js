@@ -14,3 +14,5 @@ createFoodLayer('2', 'Food-Hygiene-Rating-2');
 createFoodLayer('3', 'Food-Hygiene-Rating-3');
 createFoodLayer('4', 'Food-Hygiene-Rating-4');
 createFoodLayer('5', 'Food-Hygiene-Rating-5');
+
+setTitle('Food Hygiene Map');
