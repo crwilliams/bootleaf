@@ -25,6 +25,7 @@ layers['buildings'] = {
   datafile: 'data/southampton/buildings.geojson',
   type: 'reference',
   metadata: southamptonMetadata,
+  initialSelected: true,
   search: [],
   geojson: L.geoJson(null, {
     style: function (feature) {
@@ -53,6 +54,7 @@ layers['sites'] = {
   datafile: 'data/southampton/sites.geojson',
   type: 'reference',
   metadata: southamptonMetadata,
+  initialSelected: true,
   search: [],
   geojson: L.geoJson(null, {
     style: function (feature) {

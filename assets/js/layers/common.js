@@ -14,7 +14,11 @@ function layerInit(layer) {
   $.getJSON(layer.datafile, function (data) {
     layer.geojson.addData(data);
     if(layer.initialSelected) {
-      map.addLayer(layer.emptylayer);
+      if(layer.emptylayer !== undefined) {
+        map.addLayer(layer.emptylayer);
+      } else {
+        map.addLayer(layer.geojson);
+      }
     }
     if(layer.search !== undefined) {
       layer.bh = new Bloodhound({
