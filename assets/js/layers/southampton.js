@@ -39,6 +39,18 @@ layers['buildings'] = {
     },
     onEachFeature: function (feature, layer) {
       handleFeature('buildings', feature, layer);
+    },
+    pointToLayer: function (feature, latlng) {
+      return L.marker(latlng, {
+        icon: L.icon({
+          iconUrl: 'http://opendatamap.ecs.soton.ac.uk/img/icon/Media/blank.png',
+          iconSize: [24, 28],
+          iconAnchor: [12, 28],
+          popupAnchor: [0, -25]
+        }),
+        title: feature.properties.NAME,
+        riseOnHover: true
+      });
     }
   }),
   tatemplate: {
@@ -69,6 +81,18 @@ layers['sites'] = {
     },
     onEachFeature: function (feature, layer) {
       handleFeature('sites', feature, layer);
+    }  ,
+    pointToLayer: function (feature, latlng) {
+      return L.marker(latlng, {
+        icon: L.icon({
+          iconUrl: 'http://opendatamap.ecs.soton.ac.uk/img/icon/Media/blank.png',
+          iconSize: [24, 28],
+          iconAnchor: [12, 28],
+          popupAnchor: [0, -25]
+        }),
+        title: feature.properties.NAME,
+        riseOnHover: true
+      });
     }
   }),
   tatemplate: {
