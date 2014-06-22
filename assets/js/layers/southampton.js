@@ -77,3 +77,4 @@ layers['sites'] = {
 };
 
 setTitle('University of Southampton Map');
+var defaultViewport = L.latLngBounds(L.latLng(50.932858999577164, -1.4007300639873421), L.latLng(50.938211037309856, -1.3923620003962731));
