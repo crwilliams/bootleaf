@@ -97,11 +97,19 @@ function sidebarClick(lat, lng, id, layer) {
     sidebar.hide();
     getViewport();
   }
-  map.setView([lat, lng], 17);
+  if(lat !== undefined && lng != undefined) {
+    map.setView([lat, lng], 17);
+  } else {
+    map.fitBounds(layer.getLayer(id));
+  }
   if (!map.hasLayer(layer)) {
     map.addLayer(layer);
   }
-  map._layers[id].fire("click");
+  if(lat !== undefined && lng != undefined) {
+    map._layers[id].fire("click");
+  } else {
+    layer.getLayer(id).openPopup();
+  }
 }
 
 /* Basemap Layers */

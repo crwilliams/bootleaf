@@ -110,7 +110,16 @@ function handleFeature(layername, feature, layer) {
         closeButton: false
       });
     }
-    var onclick = ' onclick="sidebarClick('+layer.feature.geometry.coordinates[1]+', '+layer.feature.geometry.coordinates[0]+', '+L.stamp(layer)+', layers[\'' + layername + '\'].emptylayer); return false;"';
+    var layervar = 'geojson';
+    if(layers[layername].emptylayer !== undefined) {
+      layervar = 'geojson';
+    }
+    var onclick = '';
+    if(layer.feature.geometry.type == 'Point') {
+      onclick = ' onclick="sidebarClick('+layer.feature.geometry.coordinates[1]+', '+layer.feature.geometry.coordinates[0]+', '+L.stamp(layer)+', layers[\'' + layername + '\'].' + layervar + '); return false;"';
+    } else if(layer.feature.geometry.type == 'Polygon') {
+      onclick = ' onclick="sidebarClick(undefined, undefined, '+L.stamp(layer)+', layers[\'' + layername + '\'].' + layervar + '); return false;"';
+    }
     var row = '';
     row += '<tr>';
     var valueNames = getValueNames(layername, layers[layername].columns);
