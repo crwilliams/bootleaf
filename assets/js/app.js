@@ -12,7 +12,7 @@ $(document).ready(function() {
   getViewport();
   var poi_tab_class = ' class="active"';
   for(layername in layers) {
-    if(layers[layername].type == 'point of interest') {
+    if(layers[layername].type == 'point of interest' || layers[layername].type == 'reference') {
       var th = '';
       if(layers[layername].columns !== undefined) {
         for(i in layers[layername].columns) {
@@ -118,26 +118,38 @@ var mapquestOSM = L.tileLayer("http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.
   subdomains: ["otile1", "otile2", "otile3", "otile4"],
   attribution: 'Tiles courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">. Map data (c) <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> contributors, CC-BY-SA.'
 });
-var mapquestOAM = L.tileLayer("http://{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg", {
-  maxZoom: 18,
-  subdomains: ["oatile1", "oatile2", "oatile3", "oatile4"],
-  attribution: 'Tiles courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a>. Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency'
-});
-var mapquestHYB = L.layerGroup([L.tileLayer("http://{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg", {
-  maxZoom: 18,
-  subdomains: ["oatile1", "oatile2", "oatile3", "oatile4"]
-}), L.tileLayer("http://{s}.mqcdn.com/tiles/1.0.0/hyb/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  subdomains: ["oatile1", "oatile2", "oatile3", "oatile4"],
-  attribution: 'Labels courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">. Map data (c) <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> contributors, CC-BY-SA. Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency'
-})]);
 
 /* Single marker cluster layer to hold all clusters */
 var markerClusters = new L.MarkerClusterGroup({
   spiderfyOnMaxZoom: true,
+  spiderfyDistanceMultiplier: 2,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: true,
-  disableClusteringAtZoom: 16
+  maxClusterRadius: 20,
+  iconCreateFunction: function (cluster) {
+    var childUrlArray = [];
+    var childCount = cluster.getChildCount();
+    var iconHtml = '';
+    $.each(cluster.getAllChildMarkers(), function(index, marker) {
+      var folder = marker.options.icon.options.iconUrl.replace(/\/[^\/]*\.png/, '/blank.png');
+      if(childUrlArray[folder] != undefined) {
+        childUrlArray[folder] += 1;
+      } else {
+        childUrlArray[folder] = 1;
+      }
+    });
+    var i = 0;
+    for(x in childUrlArray) {
+      iconHtml += '<img style="position: absolute; height: 28px; width: 24px; top:' + (i * -3) + 'px; left:' + (i * 3) + 'px;" src="' + x + '" />';
+      i++;
+      if(childUrlArray[x] > 1) {
+        iconHtml += '<img style="position: absolute; height: 28px; width: 24px; top:' + (i * -3) + 'px; left:' + (i * 3) + 'px;" src="' + x + '" />';
+        i++;
+      }
+    }
+    var iconSize = 40;
+    return new L.DivIcon({ html: iconHtml, className: 'marker-cluster-invisible', iconSize: [24, 28], iconAnchor: [12, 28] });
+  }
 });
 
 map = L.map("map", {
@@ -222,9 +234,7 @@ var locateControl = L.control.locate({
 }).addTo(map);
 
 var baseLayers = {
-  "Street Map": mapquestOSM,
-  "Aerial Imagery": mapquestOAM,
-  "Imagery with Streets": mapquestHYB
+  "Street Map": mapquestOSM
 };
 
 var groupedOverlays = {
@@ -278,7 +288,7 @@ $(document).one("ajaxStop", function () {
 
   var lists = [];
   for(layername in layers) {
-    if(layers[layername].type == 'point of interest') {
+    if(layers[layername].type == 'point of interest' || layers[layername].type == 'reference') {
       lists[layername] = makeList(layername, layers[layername].columns);
     }
   }

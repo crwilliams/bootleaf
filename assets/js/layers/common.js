@@ -1,5 +1,15 @@
 var layers = [];
 
+var normalize = function(str) {
+  var charMap = {'é': 'e'};
+  $.each(charMap, function(chars, normalized) {
+    var regex = new RegExp('[' + chars + ']', 'gi');
+    str = str.replace(regex, normalized);
+  });
+
+  return str;
+}
+
 function layerInit(layer) {
   $.getJSON(layer.datafile, function (data) {
     layer.geojson.addData(data);
@@ -10,7 +20,7 @@ function layerInit(layer) {
       layer.bh = new Bloodhound({
         name: layer.name,
         datumTokenizer: function (d) {
-          return Bloodhound.tokenizers.whitespace(d.name);
+          return Bloodhound.tokenizers.whitespace(normalize(d.name));
         },
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         local: layer.search,
@@ -145,15 +155,26 @@ function handleFeature(layername, feature, layer) {
     }
     row += '</tr>';
     $("#" + layername + "-table tbody").append(row);
-    layers[layername].search.push({
-      name: layer.feature.properties.NAME,
-      address: layer.feature.properties.ADDRESS1,
-      icon: layer.feature.properties.ICON,
-      source: layers[layername].name,
-      id: L.stamp(layer),
-      lat: layer.feature.geometry.coordinates[1],
-      lng: layer.feature.geometry.coordinates[0]
-    });
+    if(layer.getBounds !== undefined) {
+      layers[layername].search.push({
+        name: layer.feature.properties.NAME,
+        address: layer.feature.properties.ADDRESS1,
+        icon: layer.feature.properties.ICON,
+        source: layers[layername].name,
+        id: L.stamp(layer),
+        bounds: layer.getBounds()
+      });
+    } else {
+      layers[layername].search.push({
+        name: layer.feature.properties.NAME,
+        address: layer.feature.properties.ADDRESS1,
+        icon: layer.feature.properties.ICON,
+        source: layers[layername].name,
+        id: L.stamp(layer),
+        lat: layer.feature.geometry.coordinates[1],
+        lng: layer.feature.geometry.coordinates[0]
+      });
+    }
   }
 }
 
@@ -170,3 +191,35 @@ function getTypeaheadTemplate(layer) {
   }
   return typeaheadTemplate;
 }
+
+function createLayer(layername, name, icon, metadata)
+{
+  var cleanLayername = layername.replace(/\//g, '-');
+  layers[cleanLayername] = {
+    name: name,
+    datafile: 'data/' + layername + '.geojson',
+    type: 'point of interest',
+    icon: icon,
+    metadata: metadata,
+    initialSelected: true,
+    search: [],
+    /* Empty layer placeholder to add to layer control for listening when to add/remove museums to markerClusters layer */
+    emptylayer: L.geoJson(null),
+    geojson: L.geoJson(null, {
+      pointToLayer: function (feature, latlng) {
+        return getDefaultMarker(layers[cleanLayername], feature, latlng);
+      },
+      onEachFeature: function (feature, layer) {
+        handleFeature(cleanLayername, feature, layer);
+      }
+    }),
+    typeaheadFormat: "<img src='{{icon}}' width='12' height='14'>&nbsp;{{name}}",
+    columns: ['Name']
+  };
+}
+
+var version = "southampton";
+if(window.location.hash) {
+  version = window.location.hash.substring(1).replace(/_.*/, '');
+}
+document.write('<script src="assets/js/layers/' + version + '.js"></script>');
