@@ -106,3 +106,5 @@ createSouthamptonLayer('Tourism', 'Tourism-Religion');
 createSouthamptonLayer('Stores', 'Retail');
 createSouthamptonLayer('Education', 'Education');
 createSouthamptonLayer('Sports', 'Sports');
+
+$('.navbar-inverse').get(0).style.backgroundColor = '#014359';
