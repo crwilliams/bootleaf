@@ -91,6 +91,9 @@ input[type="radio"], input[type="checkbox"] {
   line-height: 34px;
   text-align: center;
 }
+.leaflet-popup {
+  min-width: 200px;
+}
 .leaflet-popup-content {
   margin-top: 5px;
   margin-bottom: 5px;
