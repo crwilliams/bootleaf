@@ -1,4 +1,5 @@
 var layers = [];
+var defaultViewport = undefined;
 
 var normalize = function(str) {
   var charMap = {'à': 'a', 'éèê': 'e', 'ÉÈ': 'E', 'ñ': 'n', 'Ò': 'o', 'ù': 'u', 'Ü': 'U'};
