@@ -158,8 +158,8 @@ var markerClusters = new L.MarkerClusterGroup({
 });
 
 map = L.map("map", {
-  zoom: 10,
-  center: [40.702222, -73.979378],
+  zoom: 6,
+  center: [54, -2],
   layers: [mapquestOSM, markerClusters],
   zoomControl: false,
   attributionControl: false
