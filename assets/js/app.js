@@ -1,4 +1,5 @@
 var map;
+var defaultViewport = undefined;
 
 for(layername in layers) {
   if(layers[layername].init !== undefined) {
