@@ -1,7 +1,7 @@
 var layers = [];
 
 var normalize = function(str) {
-  var charMap = {'é': 'e'};
+  var charMap = {'à': 'a', 'éèê': 'e', 'ÉÈ': 'E', 'ñ': 'n', 'Ò': 'o', 'ù': 'u', 'Ü': 'U'};
   $.each(charMap, function(chars, normalized) {
     var regex = new RegExp('[' + chars + ']', 'gi');
     str = str.replace(regex, normalized);
