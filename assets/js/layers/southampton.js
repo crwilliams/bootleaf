@@ -11,6 +11,7 @@ function createSouthamptonLayer(layername, name)
 }
 
 layers['sites'] = {
+  layername: 'sites',
   name: 'Sites',
   datafile: 'data/southampton/sites.geojson',
   type: 'reference',
@@ -53,6 +54,7 @@ layers['sites'] = {
 };
 
 layers['buildings'] = {
+  layername: 'buildings',
   name: 'Buildings',
   datafile: 'data/southampton/buildings.geojson',
   type: 'reference',
