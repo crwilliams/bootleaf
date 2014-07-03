@@ -13,6 +13,11 @@ var normalize = function(str) {
 
 function layerInit(layer) {
   $.getJSON(layer.datafile, function (data) {
+    if(data.datasets) {
+      for(i in data.datasets) {
+        $("#" + layer.layername + "-tab ul").append('<li>' + data.datasets[i] + '</li>');
+      }
+    }
     layer.geojson.addData(data);
     if(layer.initialSelected) {
       if(layer.emptylayer !== undefined) {
@@ -201,6 +206,7 @@ function createLayer(layername, name, icon, metadata)
 {
   var cleanLayername = layername.replace(/\//g, '-');
   layers[cleanLayername] = {
+    layername: cleanLayername,
     name: name,
     datafile: 'data/' + layername + '.geojson',
     type: 'point of interest',
