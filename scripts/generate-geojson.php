@@ -240,24 +240,27 @@ function prepareDatasets($datasets) {
 			$alldatasets[$dataset] = true;
 		}
 	}
-	$ogl = ' (available under the <a href=\'http://reference.data.gov.uk/id/open-government-licence\'>Open Government Licence</a>)';
-	$datasetinfo = array(
-		'http://id.southampton.ac.uk/dataset/places/latest' => array('Buildings and Places', $ogl),
-		'http://id.southampton.ac.uk/dataset/catering/latest' => array('Catering', $ogl),
-		'http://id.southampton.ac.uk/dataset/amenities/latest' => array('Local Amenities', $ogl),
-		'http://id.southampton.ac.uk/dataset/bus-info/latest' => array('Southampton Bus Information', $ogl),
-		'http://id.southampton.ac.uk/dataset/room-features/latest' => array('Teaching Room Features', $ogl),
-		'http://id.southampton.ac.uk/dataset/wifi/latest' => array('WiFi', $ogl),
-		'http://id.southampton.ac.uk/dataset/facilities/latest' => array('Facilities and Equipment', $ogl),
-		'http://id.southampton.ac.uk/dataset/services/latest' => array('Services', $ogl),
-		'http://id.southampton.ac.uk/dataset/vending-machines/latest' => array('Vending Machines', $ogl),
-		'http://id.southampton.ac.uk/dataset/workstation-clusters/latest' => array('iSolutions Workstation Clusters', $ogl),
-		'http://id.southampton.ac.uk/dataset/workstation-opening/latest' => array('iSolutions Workstation Opening Times', $ogl),
-	);
+	
+	$q = '
+	SELECT * WHERE {
+	  ?d a <http://www.w3.org/ns/dcat#Dataset> .
+	  ?d <http://purl.org/dc/terms/license> ?license .
+	  ?d <http://purl.org/dc/terms/title> ?title .
+	  ?d <http://rdfs.org/ns/void#dataDump> ?dd .
+	} ORDER BY ?t
+';
+	$d = sparql_get('http://sparql.data.southampton.ac.uk', $q);
+	foreach($d as $p) {
+		if($p['license'] == 'http://reference.data.gov.uk/id/open-government-licence') {
+			$p['license'] = ' (available under the <a href=\'' . $p['license'] . '\'>Open Government Licence</a>)';
+		}
+		$datasetinfo[$p['dd']] = $p;
+	}
+	
 	foreach(array_keys($alldatasets) as $dataset) {
 		if($dataset == '') continue;
 		if(array_key_exists($dataset, $datasetinfo)) {
-			$alldatasets[$dataset] = '<a href=\''.$dataset.'\'>'.$datasetinfo[$dataset][0].'</a>'.$datasetinfo[$dataset][1];
+			$alldatasets[$dataset] = '<a href=\''.$datasetinfo[$dataset]['d'].'\'>'.$datasetinfo[$dataset]['title'].'</a>'.$datasetinfo[$dataset]['license'];
 		} else {
 			$alldatasets[$dataset] = strtoupper($dataset);
 		}
