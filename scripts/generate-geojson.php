@@ -188,10 +188,10 @@ $q = '
                 PREFIX gr: <http://purl.org/goodrelations/v1#>
                 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
                 
-                SELECT DISTINCT ?id ?lat ?long ?label WHERE {
-                  GRAPH ?g1 {?id <http://purl.org/openorg/hasFeature> ?f .
-                             ?f a <http://id.southampton.ac.uk/location-feature/Shower> .}
-                  GRAPH ?g2 {?f rdfs:label ?label .}
+                SELECT DISTINCT ?id ?lat ?long ?label ?g1 ?g2 ?g3 ?g4 ?g5 WHERE {
+                  GRAPH ?g1 {?id <http://purl.org/openorg/hasFeature> ?f .}
+                  GRAPH ?g2 {?f a <http://id.southampton.ac.uk/location-feature/Shower> .}
+                  GRAPH ?g3 {?f rdfs:label ?label .}
                   OPTIONAL { GRAPH ?g4 {?id spacerel:within ?b .}
                              GRAPH <http://id.southampton.ac.uk/dataset/places/latest> {
                                ?b geo:lat ?lat .
@@ -209,12 +209,12 @@ $q = '
                   OPTIONAL { GRAPH ?g5 {?id geo:lat ?lat .
                                         ?id geo:long ?long .}
                            }
-                  GRAPH ?g3 {?id <http://purl.org/openorg/mapIcon> ?icon .}
                   FILTER ( BOUND(?long) && BOUND(?lat) )
                 } ORDER BY ?label
 ';
 	$d = sparql_get('http://sparql.data.southampton.ac.uk', $q);
 	foreach($d as $p) {
+		$p['icon'] = 'http://data.southampton.ac.uk/map-icons/Offices/shower.png';
 		if(reject($p)) continue;
 		$cat = getCategory($p['icon']);
 		if(!isset($p['g5'])) {
